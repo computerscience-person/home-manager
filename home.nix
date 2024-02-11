@@ -91,9 +91,6 @@
 
   programs.firefox = {
     enable = true;
-    # profiles.WVSU = {
-    #   
-    # };
   };
 
   programs.chromium = {
