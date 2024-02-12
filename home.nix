@@ -40,9 +40,9 @@
     neovide bottom alacritty
     fish bat vscodium-fhs
     mpv youtube-dl lazygit
-    pandoc
+    pandoc typst
     # GUI
-    keepassxc
+    keepassxc mupdf
     # LSP's
     nil # Nix language server
   ];
