@@ -40,6 +40,7 @@
     neovide bottom alacritty
     fish bat vscodium-fhs
     mpv youtube-dl lazygit
+    pandoc
     # GUI
     keepassxc
     # LSP's
