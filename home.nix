@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs,  ... }:
 
-{
+{ 
+  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "virus-free";
@@ -36,7 +37,7 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
     neofetch ripgrep eza
-    mtr glow broot neovim 
+    mtr glow broot 
     neovide bottom alacritty
     fish bat vscodium-fhs
     mpv youtube-dl lazygit
@@ -45,6 +46,8 @@
     keepassxc mupdf
     # LSP's
     nil # Nix language server
+    # Fonts
+    fira-code-nerdfont jetbrains-mono
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -106,4 +109,69 @@
     #   "MetricsReportingEnabled" = false;
     # };
   };
+
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      shell.program = "fish";
+      window = {
+        dynamic_padding = true;
+        decorations = "None";
+        opacity = 0.95;
+        startup_mode = "Fullscreen";
+      };
+      font.normal.family = "Fira Code Nerd Font";
+    };
+  };
+
+  programs.nixvim = {
+    enable = true;
+    colorschemes.oxocarbon.enable = true;
+    plugins = {
+      # Treesitter
+      treesitter.enable = true;
+      treesitter-context.enable = true;
+      treesitter-refactor.enable = true;
+      treesitter-textobjects.enable = true;
+      # UI + Conveniences
+      nvim-cmp.enable = true;
+      todo-comments.enable = true;
+      oil.enable = true;
+      gitsigns.enable = true;
+      flash.enable = true;
+      lualine.enable = true;
+      bufferline.enable = true;
+      which-key.enable = true;
+      wilder.enable = true;
+      # Languages
+      lsp = {
+        enable = true;
+        servers = {
+          # Nix
+          nil_ls = {
+            enable = true;
+            installLanguageServer = false;
+          };
+          # Rust
+          rust-analyzer = {
+            enable = true;
+	    installCargo = true;
+	    installRustc = true;
+	  };
+          # Python
+          pyright.enable = true;
+          ruff-lsp.enable = true;
+          # Typst
+          typst-lsp.enable = true;
+          # Markdown
+          marksman.enable = true;
+        };
+      };
+      # Additional Rust stuff
+      crates-nvim.enable = true;
+      rust-tools.enable = true;
+    };
+  };
+
+  fonts.fontconfig.enable = true;
 }
