@@ -41,7 +41,8 @@
     neovide bottom alacritty
     fish bat vscodium-fhs
     mpv youtube-dl lazygit
-    pandoc typst aria2
+    pandoc typst aria
+    gnupg gpg-tui
     # GUI
     keepassxc mupdf
     # LSP's
