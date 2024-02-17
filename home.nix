@@ -1,4 +1,4 @@
-{ config, pkgs, inputs,  ... }:
+{ config, pkgs, inputs, lib,  ... }:
 
 { 
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
@@ -84,6 +84,7 @@
   #
   home.sessionVariables = {
      EDITOR = "vim";
+     GTK_THEME = "Catppuccin-Mocha-Compact-Rosewater-Lavender-Dark";
   };
 
   # Let Home Manager install and manage itself.
@@ -127,16 +128,116 @@
 
   programs.nixvim = {
     enable = true;
+    # copied from github:GaetanLepage/dotfiles
+    globals = {
+      mapleader = " ";
+      maplocalleader = " ";
+    };
+
+    keymaps = let
+      normal =
+        lib.mapAttrsToList
+        (key: action: {
+          mode = "n";
+          inherit action key;
+        })
+        {
+          "<Space>" = "<NOP>";
+
+          # Esc to clear search results
+          "<esc>" = ":noh<CR>";
+
+          # fix Y behaviour
+          Y = "y$";
+
+          # back and fourth between the two most recent files
+          "<C-c>" = ":b#<CR>";
+
+          # close by Ctrl+x
+          "<C-x>" = ":close<CR>";
+
+          # save by Space+s or Ctrl+s
+          "<leader>s" = ":w<CR>";
+          "<C-s>" = ":w<CR>";
+
+          # navigate to left/right window
+          "<leader>h" = "<C-w>h";
+          "<leader>l" = "<C-w>l";
+
+          # Press 'H', 'L' to jump to start/end of a line (first/last character)
+          L = "$";
+          H = "^";
+
+          # resize with arrows
+          "<C-Up>" = ":resize -2<CR>";
+          "<C-Down>" = ":resize +2<CR>";
+          "<C-Left>" = ":vertical resize +2<CR>";
+          "<C-Right>" = ":vertical resize -2<CR>";
+
+          # move current line up/down
+          # M = Alt key
+          "<M-k>" = ":move-2<CR>";
+          "<M-j>" = ":move+<CR>";
+
+          "<leader>rp" = ":!remi push<CR>";
+        };
+      visual =
+        lib.mapAttrsToList
+        (key: action: {
+          mode = "v";
+          inherit action key;
+        })
+        {
+          # better indenting
+          ">" = ">gv";
+          "<" = "<gv";
+          "<TAB>" = ">gv";
+          "<S-TAB>" = "<gv";
+
+          # move selected line / block of text in visual mode
+          "K" = ":m '<-2<CR>gv=gv";
+          "J" = ":m '>+1<CR>gv=gv";
+        };
+    in
+      config.nixvim.helpers.keymaps.mkKeymaps
+      {options.silent = true;}
+      (normal ++ visual);
+    # from github:GaetanLepage
     colorschemes.oxocarbon.enable = true;
     plugins = {
       # Treesitter
       treesitter.enable = true;
+      treesitter.indent = true;
       treesitter-context.enable = true;
       treesitter-refactor.enable = true;
       treesitter-textobjects.enable = true;
       # UI + Conveniences
-      nvim-cmp.enable = true;
+      nvim-cmp = {
+        enable = true;
+	mapping = {
+          "<C-Space>" = "cmp.mapping.complete()";
+          "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+          "<C-e>" = "cmp.mapping.close()";
+          "<C-f>" = "cmp.mapping.scroll_docs(4)";
+          "<CR>" = "cmp.mapping.confirm({ select = true })";
+          "<S-Tab>" = {
+            action = "cmp.mapping.select_prev_item()";
+            modes = [
+              "i"
+              "s"
+            ];
+          };
+          "<Tab>" = {
+            action = "cmp.mapping.select_next_item()";
+            modes = [
+              "i"
+              "s"
+            ];
+          };
+	};
+      };
       todo-comments.enable = true;
+      trouble.enable = true;
       oil.enable = true;
       gitsigns.enable = true;
       flash.enable = true;
@@ -147,6 +248,23 @@
       # Languages
       lsp = {
         enable = true;
+	keymaps = {
+          silent = true;
+          diagnostic = {
+            # Navigate in diagnostics
+            "<leader>k" = "goto_prev";
+            "<leader>j" = "goto_next";
+          };
+
+          lspBuf = {
+            gd = "definition";
+            gD = "references";
+            gt = "type_definition";
+            gi = "implementation";
+            K = "hover";
+            "<F2>" = "rename";
+          };
+        };
         servers = {
           # Nix
           nil_ls = {
@@ -156,8 +274,8 @@
           # Rust
           rust-analyzer = {
             enable = true;
-	    installCargo = true;
-	    installRustc = true;
+	    installCargo = false;
+	    installRustc = false;
 	  };
           # Python
           pyright.enable = true;
@@ -173,6 +291,40 @@
       rust-tools.enable = true;
     };
   };
-
   fonts.fontconfig.enable = true;
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Catppuccin-Mocha-Compact-Rosewater-Lavender-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "rosewater" "lavender" ];
+	size = "compact";
+	tweaks = [ "rimless" "black" ];
+	variant = "mocha";
+      };
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+    };
+
+    iconTheme = {
+      name = "Fluent-dark";
+      package = pkgs.fluent-icon-theme;
+    };
+  };
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style.name = "adwaita-gtk";
+  };
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      # gtk-theme = "Catppuccin-Frappe-Standard-Blue-light";
+      gtk-theme = "Catppuccin-Mocha-Compact-Rosewater-Lavender-Dark";
+      cursor-theme = "Bibata-Modern-Ice";
+      icon-theme = "Fluent-dark";
+    };
+  };
 }
