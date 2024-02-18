@@ -153,7 +153,7 @@
           "<C-c>" = ":b#<CR>";
 
           # close by Ctrl+x
-          "<C-x>" = ":close<CR>";
+          # "<C-x>" = ":close<CR>";
 
           # save by Space+s or Ctrl+s
           "<leader>s" = ":w<CR>";
@@ -177,8 +177,6 @@
           # M = Alt key
           "<M-k>" = ":move-2<CR>";
           "<M-j>" = ":move+<CR>";
-
-          "<leader>rp" = ":!remi push<CR>";
         };
       visual =
         lib.mapAttrsToList
@@ -213,6 +211,12 @@
       # UI + Conveniences
       nvim-cmp = {
         enable = true;
+        autoEnableSources = true;
+        sources = [
+         {name = "nvim_lsp";}
+	  {name = "path";}
+	  {name = "buffer";}
+	];
 	mapping = {
           "<C-Space>" = "cmp.mapping.complete()";
           "<C-d>" = "cmp.mapping.scroll_docs(-4)";
