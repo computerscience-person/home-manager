@@ -199,7 +199,7 @@
       config.nixvim.helpers.keymaps.mkKeymaps
       {options.silent = true;}
       (normal ++ visual);
-    # from github:GaetanLepage
+    # --| from github:GaetanLepage
     colorschemes.oxocarbon.enable = true;
     plugins = {
       # Treesitter
@@ -213,9 +213,11 @@
         enable = true;
         autoEnableSources = true;
         sources = [
-         {name = "nvim_lsp";}
+          {name = "nvim_lsp";}
 	  {name = "path";}
 	  {name = "buffer";}
+	  {name = "emoji";}
+	  {name = "latex_symbols";}
 	];
 	mapping = {
           "<C-Space>" = "cmp.mapping.complete()";
@@ -294,7 +296,9 @@
       rust-tools.enable = true;
     };
   };
+  # Fonts
   fonts.fontconfig.enable = true;
+  # Desktop Appearance
   gtk = {
     enable = true;
     theme = {
