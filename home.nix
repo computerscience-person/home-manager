@@ -250,6 +250,10 @@
       bufferline.enable = true;
       which-key.enable = true;
       wilder.enable = true;
+      # Linters
+      lint = {
+        enable = true;
+      };
       # Languages
       lsp = {
         enable = true;
