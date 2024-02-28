@@ -39,11 +39,13 @@
     neofetch ripgrep eza
     mtr glow broot 
     neovide bottom alacritty
-    fish bat vscodium-fhs
+    bat vscodium-fhs
     mpv youtube-dl lazygit
     pandoc typst aria
+    unp helix dust
+    zellij zoxide
     # GUI
-    keepassxc mupdf
+    keepassxc mupdf pavucontrol 
     # LSP's
     nil # Nix language server
     # Fonts
@@ -82,16 +84,31 @@
   #  /etc/profiles/per-user/virus-free/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-     EDITOR = "vim";
-     GTK_THEME = "Catppuccin-Mocha-Compact-Rosewater-Lavender-Dark";
+    EDITOR = "vim";
+    GTK_THEME = "Catppuccin-Mocha-Compact-Rosewater-Lavender-Dark";
+    SHELL = "fish";
   };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.fish = {
+    enable = true;
+  };
+  
   programs.git = {
     enable = true;
     userName = "Oliver Ladores";
     userEmail = "oliver.ladores@wvsu.edu.ph";
+  };
+
+  programs.zoxide = {
+    enable = true;
+  };
+
+  programs.yazi = {
+    enable = true;
+    enableFishIntegration = true;
   };
 
   programs.firefox = {
